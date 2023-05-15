@@ -1,5 +1,6 @@
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 import { useContext, useState } from "react";
 import { FlashCardContext } from "../FlashCardContext";
 
@@ -7,13 +8,24 @@ export function FlashCard() {
   const wordList = useContext(FlashCardContext);
 
   let [wordNum, setWordNum] = useState(0);
-  var firstLine = wordList.split("\n")[wordNum];
+  let [attemptWord, setAttemptWord] = useState("");
+  var wordArray = wordList.split("\n");
+  var firstLine = wordArray[wordNum].toLowerCase();
   var answer = firstLine.split(";")[0];
   var prompt = firstLine.split(";")[1];
   var translated = firstLine.split(";")[3];
   var fullSentence = firstLine.split(";")[2];
   var nextCard = () => {
     setWordNum(wordNum + 1);
+  };
+
+  var handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (attemptWord.toLowerCase() == answer) {
+      alert("NICE");
+    } else {
+      alert("WRONG");
+    }
   };
 
   return (
@@ -33,8 +45,14 @@ export function FlashCard() {
       <Card.Body>
         <Card.Title> {prompt}</Card.Title>
         <Card.Text>{translated}</Card.Text>
-        <Form.Control type="text" placeholder={answer} />
-        <h1 onClick={nextCard}>{fullSentence}</h1>
+        <Form onSubmit={(event) => handleSubmit(event)}>
+          <input
+            type="text"
+            placeholder={answer}
+            onChange={(e) => setAttemptWord(e.target.value)}
+          />
+        </Form>
+        <Button onClick={nextCard} />
         <Card.Text>adj</Card.Text>
       </Card.Body>
     </Card>
