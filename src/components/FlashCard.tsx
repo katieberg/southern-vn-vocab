@@ -13,9 +13,10 @@ export function FlashCard() {
   var wordArray = wordList.split("\n");
   var firstLine = wordArray[wordNum].toLowerCase();
   var answer = firstLine.split(";")[0];
-  var prompt = firstLine.split(";")[1];
-  var translated = firstLine.split(";")[3];
-  var fullSentence = firstLine.split(";")[2];
+  var mp3File = firstLine.split(";")[4];
+  var prompt = firstLine.split(";")[2];
+  var translated = firstLine.split(";")[5];
+  var fullSentence = firstLine.split(";")[6];
   var nextCard = () => {
     setWordNum(wordNum + 1);
     setPassOrFail("");
@@ -38,11 +39,13 @@ export function FlashCard() {
   };
   var handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    let mp3Str = "../../public/mp3s/" + mp3File;
+    new Audio(mp3Str).play();
     if (attemptWord.toLowerCase() == answer) {
       setPassOrFail("Pass");
       diffFunction();
       setAttemptWord("");
-      setTimeout(nextCard, 1000);
+      setTimeout(nextCard, 3000);
     } else if (attemptWord.toLowerCase() != answer) {
       diffFunction();
       setPassOrFail("Fail");
@@ -67,33 +70,36 @@ export function FlashCard() {
       <Card.Body>
         <Card.Title> {prompt}</Card.Title>
         <Card.Text>{translated}</Card.Text>
+        <div></div>
         <Form onSubmit={(event) => handleSubmit(event)}>
-          {passOrFail != "" && (
-            <div>
-              {diff.map((element, index) => {
-                if (element == 1) {
-                  return (
-                    <span key={index} style={{ color: "green" }}>
-                      {answer.charAt(index - 1)}
-                    </span>
-                  );
-                } else if (element == -1) {
-                  return (
-                    <span key={index} style={{ color: "red" }}>
-                      {answer.charAt(index - 1)}
-                    </span>
-                  );
-                }
-              })}
-            </div>
-          )}
-          <input
-            type="text"
-            value={attemptWord}
-            onChange={(e) => handleChange(e)}
-          />
+          <div>
+            {passOrFail != "" && (
+              <div style={{ position: "absolute", zIndex: "2" }}>
+                {diff.map((element, index) => {
+                  if (element == 1) {
+                    return (
+                      <span key={index} style={{ color: "green" }}>
+                        {answer.charAt(index - 1)}
+                      </span>
+                    );
+                  } else if (element == -1) {
+                    return (
+                      <span key={index} style={{ color: "red" }}>
+                        {answer.charAt(index - 1)}
+                      </span>
+                    );
+                  }
+                })}
+              </div>
+            )}
+            <input
+              type="text"
+              style={{ zIndex: "1" }}
+              value={attemptWord}
+              onChange={(e) => handleChange(e)}
+            />
+          </div>
         </Form>
-        <Card.Text>adj</Card.Text>
       </Card.Body>
     </Card>
   );
