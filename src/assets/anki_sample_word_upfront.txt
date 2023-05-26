@@ -1,3 +1,4 @@
+Answer;MP3 for answer only;Prompt;Full Sentence;MP3 for full Sentence;Word in English;Sentence in English
 Sáng nay;933b9ce3fd4a98f55c664d3ceacad0da.mp3;____ ___ tui ăn cá.;Sáng nay tui ăn cá.;e93cbb70839c1469178739cf00495961.mp3;This morning;This morning, I ate fish.
 Chiều nay;3d6307ddabc2afca8407e6effcfde0b6.mp3;_____ ___ cổ không đi làm.;Chiều nay cổ không đi làm.;261ee6e239ec7c0c608536149e0394a4.mp3;This afternoon;This afternoon she doesn't go to work.
 đi làm;68fab23fdb2c5e3c48b88c75810d3eba.mp3;Chiều nay cổ không __ ___.;Chiều nay cổ không đi làm.;261ee6e239ec7c0c608536149e0394a4.mp3;go to work;This afternoon she doesn't go to work.
