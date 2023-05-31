@@ -60,18 +60,6 @@ export function FlashCard() {
       }
     }
   }
-  console.log(
-    "bool " +
-      underscoreBool +
-      " currChunk: " +
-      currChunk.toString() +
-      " chunk1: " +
-      chunk1 +
-      " chunk2: " +
-      chunk2 +
-      " chunk3: " +
-      chunk3
-  );
 
   var translated = firstLine.split(";")[5];
   var nextCard = () => {
@@ -96,8 +84,8 @@ export function FlashCard() {
   };
   var handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let sentenceMP3 = "../../public/mp3s/" + sentenceMP3file;
-    let wordMP3 = "../../public/mp3s/" + wordOnlyMP3File;
+    let sentenceMP3 = "../../mp3s/" + sentenceMP3file;
+    let wordMP3 = "../../mp3s/" + wordOnlyMP3File;
     if (attemptWord.toLowerCase() == answer) {
       new Audio(sentenceMP3).play();
       setPassOrFail("Pass");
