@@ -74,7 +74,6 @@ export function FlashCard() {
   );
 
   var translated = firstLine.split(";")[5];
-  var fullSentence = firstLine.split(";")[6];
   var nextCard = () => {
     setWordNum(wordNum + 1);
     setPassOrFail("");
