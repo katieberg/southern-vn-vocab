@@ -4,13 +4,15 @@ import { useContext, useState } from "react";
 import { FlashCardContext } from "../FlashCardContext";
 
 export function FlashCard() {
-  const wordList = useContext(FlashCardContext);
+  const wordArray = useContext(FlashCardContext);
 
   let [wordNum, setWordNum] = useState(1);
   let [attemptWord, setAttemptWord] = useState("");
   let [passOrFail, setPassOrFail] = useState("");
   let [diff, setDiff] = useState([0]);
-  var wordArray = wordList.split("\n");
+  if (wordArray.length == 0) {
+    return <>loading...</>;
+  }
   var firstLine = wordArray[wordNum].toLowerCase();
   var answer = firstLine.split(";")[0];
   var sentenceMP3file = firstLine.split(";")[4];

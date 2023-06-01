@@ -1,23 +1,23 @@
 import { Background } from "./components/Background";
-// import React from "react";
+
 import { FlashCardContext } from "./FlashCardContext";
+import { useEffect, useState } from "react";
 
 import "./App.css";
 import textfile from "./assets/anki_sample_word_upfront.txt";
-let textString = "";
-function Notes() {
-  fetch(textfile)
-    .then((response) => response.text())
-    .then((textContent) => {
-      textString = textContent;
-    });
-}
-Notes();
 
 function App() {
+  let [textArray, setTextArray] = useState<string[]>([]);
+  useEffect(() => {
+    fetch(textfile)
+      .then((response) => response.text())
+      .then((textContent) => {
+        setTextArray(textContent.split("\n"));
+      });
+  }, []);
   return (
     <>
-      <FlashCardContext.Provider value={textString}>
+      <FlashCardContext.Provider value={textArray}>
         <Background />
       </FlashCardContext.Provider>
     </>
