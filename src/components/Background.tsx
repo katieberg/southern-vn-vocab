@@ -1,11 +1,12 @@
 import { Header } from "./Header";
-import { FlashCard } from "./FlashCard";
+import { FlashCard2 } from "./FlashCard2";
+import { dataProps } from "myTypes";
 
-export function Background() {
+export function Background(data: dataProps) {
   return (
     <div>
       <Header />
-      <FlashCard />
+      <FlashCard2 {...data} />
     </div>
   );
 }

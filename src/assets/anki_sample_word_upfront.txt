@@ -1,4 +1,5 @@
 Answer;MP3 for answer only;Prompt;Full Sentence;MP3 for full Sentence;Word in English;Sentence in English
+của bạn;5176f5967826d90826d35486a6cbe773.mp3;Con vật yêu thích ___ ___ là gì?;Con vật yêu thích của bạn là gì?;55695c5ecb6aaf226db64f948ab91d3f.mp3;your;What is your favorite animal?
 Sáng nay;933b9ce3fd4a98f55c664d3ceacad0da.mp3;____ ___ tui ăn cá.;Sáng nay tui ăn cá.;e93cbb70839c1469178739cf00495961.mp3;This morning;This morning, I ate fish.
 Chiều nay;3d6307ddabc2afca8407e6effcfde0b6.mp3;_____ ___ cổ không đi làm.;Chiều nay cổ không đi làm.;261ee6e239ec7c0c608536149e0394a4.mp3;This afternoon;This afternoon she doesn't go to work.
 đi làm;68fab23fdb2c5e3c48b88c75810d3eba.mp3;Chiều nay cổ không __ ___.;Chiều nay cổ không đi làm.;261ee6e239ec7c0c608536149e0394a4.mp3;go to work;This afternoon she doesn't go to work.
@@ -10,7 +11,6 @@ thích;a3ae188a9324049c2f190eae09f3598a.mp3;Tối nay anh _____ ăn gì??;Tối 
 nóng;414b2e7ef53ecb5e1698a0c19755340b.mp3;Đêm nay trời ____.;Đêm nay trời nóng.;26daa817b4d7d0df9bb6f3c34d0f71de.mp3;hot;Tonight it is hot.
 Con vật;2f37f057fc5a898fc3e5acdcd5ddcf69.mp3;___ ___ yêu thích của bạn là gì?;Con vật yêu thích của bạn là gì?;55695c5ecb6aaf226db64f948ab91d3f.mp3;animal;What is your favorite animal?
 yêu thích;ef43b4da3437460d9e11b64486782577.mp3;Con vật ___ _____ của bạn là gì?;Con vật yêu thích của bạn là gì?;55695c5ecb6aaf226db64f948ab91d3f.mp3;favorite;What is your favorite animal?
-của bạn;5176f5967826d90826d35486a6cbe773.mp3;Con vật yêu thích ___ ___ là gì?;Con vật yêu thích của bạn là gì?;55695c5ecb6aaf226db64f948ab91d3f.mp3;your;What is your favorite animal?
 ngon;fe6ecab134c875efc57e003fad457802.mp3;Thịt heo ____.;Thịt heo ngon.;b58874fd809c37c48c9f95fd0ef5ed18.mp3;yummy;Pork is yummy.
 Thịt bò;ac9a53fbd7540e445abfe231bc97f476.mp3;____ __ tốt cho sức khoẻ.;Thịt bò tốt cho sức khoẻ.;e82131ea4e3d74f8eba88e9cef546d05.mp3;Beef;Beef is good for health.
 sức khoẻ;d2f6e35ea361bbd0f8c6ab55e3986706.mp3;Thịt bò tốt cho ___ ____.;Thịt bò tốt cho sức khoẻ.;e82131ea4e3d74f8eba88e9cef546d05.mp3;health;Beef is good for health.

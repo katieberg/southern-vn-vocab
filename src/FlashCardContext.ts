@@ -1,3 +1,3 @@
 import { createContext } from 'react';
 
-export const FlashCardContext = createContext<string[]>([]);
+export const FlashCardContext = createContext("");
