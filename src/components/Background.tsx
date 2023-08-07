@@ -5,7 +5,6 @@ import { dataProps } from "myTypes";
 export function Background(data: dataProps) {
   return (
     <div>
-      <Header />
       <FlashCard2 {...data} />
     </div>
   );

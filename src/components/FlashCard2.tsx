@@ -5,14 +5,14 @@ import { dataProps } from "myTypes";
 
 export function FlashCard2(data: dataProps) {
   let myData = data;
-  let [numAttempts, setNumAttempts] = useState(myData.numAttempts);
+  // let [numAttempts, setNumAttempts] = useState(myData.numAttempts);
   let [numWordsSeen, setNumWordsSeen] = useState(myData.numWordsSeen);
   let [numCorrect, setNumCorrect] = useState(myData.numCorrect);
   let [seenPile, setSeenPile] = useState(myData.seenPile);
   let [newPile, setNewPile] = useState(myData.newPile);
 
   useEffect(() => {
-    setNumAttempts(myData.numAttempts);
+    // setNumAttempts(myData.numAttempts);
     setNumWordsSeen(myData.numWordsSeen);
     setNumCorrect(myData.numCorrect);
     setSeenPile(myData.seenPile);
@@ -34,7 +34,6 @@ export function FlashCard2(data: dataProps) {
     ) {
       return "newPile";
     } else {
-      console.log(numCorrect + " " + numWordsSeen);
       return "seenPile";
     }
   };
@@ -190,7 +189,6 @@ export function FlashCard2(data: dataProps) {
       setAttemptWord("");
       setTimeout(nextCard, 3000);
     } else if (attemptWord.toLowerCase() != answer) {
-      //sometimes this breaks everything and the input box stops being an input box
       new Audio(wordMP3).play();
       diffFunction();
       setFirstTryBool(false);
@@ -198,178 +196,95 @@ export function FlashCard2(data: dataProps) {
       setAttemptWord("");
     }
   };
-  let greenBackground = "#b8e994"; //using french color scheme from FlatUI colors: yellows, reds, blues, greygreenblues, greens
-  let greenText = "#079992";
-  let redBackground = "#f8c291";
-  let redText = "#e55039";
-  let yellowIdk = "#fa983a";
-  let medYellow = "#fa983a";
-  let lightYellow = "#f6b93b";
-  let darkBlue = "#0a3d62";
 
   //want to fix colors and font family, also sometimes when input box is on a new line, the answer fills in above the line
   return (
-    <Card
-      style={{
-        width: "18rem",
-        margin: "0 auto",
-        borderBlockColor: "white",
-      }}
-      className="mb-2"
-    >
-      <Card.Header style={{ background: medYellow, color: "white" }}>
-        {category == "newPile" ? "New Word" : "Previously Seen"}
-      </Card.Header>
-      <Card.Body style={{ background: lightYellow, color: "white" }}>
-        <>
-          {underscoreChunk == 1 && (
-            <>
-              <Form
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-                onSubmit={(event) => handleSubmit(event)}
-              >
-                <div>
-                  {passOrFail != "" && (
-                    <div
+    <main>
+      <div className="flashcard">
+        <h2>{category == "newPile" ? "New Word" : "Previously Seen"}</h2>
+        <div className="flashcard-body">
+          <>
+            {underscoreChunk == 1 && (
+              <>
+                <form
+                  className="prompt"
+                  onSubmit={(event) => handleSubmit(event)}
+                >
+                  <div className="overlap-input">
+                    {passOrFail != "" && (
+                      <div className="solution-reveal">
+                        {diff.map((element, index) => {
+                          if (element == 1) {
+                            return (
+                              <span key={index} className="correct-letter">
+                                {answer.charAt(index - 1)}
+                              </span>
+                            );
+                          } else if (element == -1) {
+                            return (
+                              <span key={index} className="incorrect-letter">
+                                {answer.charAt(index - 1)}
+                              </span>
+                            );
+                          }
+                        })}
+                      </div>
+                    )}
+                    <input
+                      type="text"
                       style={{
-                        position: "absolute",
-                        zIndex: "2",
-                        margin: "0 0 0.5rem 0",
-                        fontSize: "1.25rem",
-                        fontWeight: "500",
-                        lineHeight: "1.2",
+                        width: answer.length + "ch",
                       }}
-                    >
-                      {diff.map((element, index) => {
-                        if (element == 1) {
-                          return (
-                            <span
-                              key={index}
-                              style={{
-                                color: greenText,
-                                background: greenBackground,
-                              }}
-                            >
-                              {answer.charAt(index - 1)}
-                            </span>
-                          );
-                        } else if (element == -1) {
-                          return (
-                            <span
-                              key={index}
-                              style={{
-                                color: redText,
-                                background: redBackground,
-                              }}
-                            >
-                              {answer.charAt(index - 1)}
-                            </span>
-                          );
-                        }
-                      })}
-                    </div>
-                  )}
+                      value={attemptWord}
+                      onChange={(e) => handleChange(e)}
+                    ></input>
+                    <p className="section">&emsp;{chunk2}</p>
+                  </div>
+                </form>
+              </>
+            )}
+            {underscoreChunk == 2 && (
+              <>
+                <form
+                  className="prompt"
+                  onSubmit={(event) => handleSubmit(event)}
+                >
+                  <p className="section">{chunk1}&emsp;</p>
+                  <div className="overlap-input">
+                    {passOrFail != "" && (
+                      <div className="solution-reveal">
+                        {diff.map((element, index) => {
+                          if (element == 1) {
+                            return (
+                              <span key={index} className="correct-letter">
+                                {answer.charAt(index - 1)}
+                              </span>
+                            );
+                          } else if (element == -1) {
+                            return (
+                              <span key={index} className="incorrect-letter">
+                                {answer.charAt(index - 1)}
+                              </span>
+                            );
+                          }
+                        })}
+                      </div>
+                    )}
+                  </div>
                   <input
+                    style={{ width: answer.length + "ch" }}
                     type="text"
-                    style={{
-                      zIndex: "1",
-                      margin: "0 0.5em 00.5rem 0",
-                      fontWeight: "500",
-                      lineHeight: "1.2",
-                      fontSize: "1.25rem",
-                      border: "none",
-                      paddingTop: "0px",
-                    }}
                     value={attemptWord}
                     onChange={(e) => handleChange(e)}
-                    size={answer.length}
                   ></input>
-                  <Card.Title style={{ display: "inline" }}>
-                    {" " + chunk2}
-                  </Card.Title>
-                </div>
-              </Form>
-            </>
-          )}
-          {underscoreChunk == 2 && (
-            <>
-              <Form
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                }}
-                onSubmit={(event) => handleSubmit(event)}
-              >
-                <Card.Title>{chunk1 + " "}</Card.Title>
-                <div>
-                  {passOrFail != "" && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        zIndex: "2",
-                        margin: "0 0 00.5rem 0.5em",
-                        fontSize: "1.25rem",
-                        fontWeight: "500",
-                        lineHeight: "1.2",
-                      }}
-                    >
-                      {diff.map((element, index) => {
-                        if (element == 1) {
-                          return (
-                            <span
-                              key={index}
-                              style={{
-                                color: greenText,
-                                background: greenBackground,
-                              }}
-                            >
-                              {answer.charAt(index - 1)}
-                            </span>
-                          );
-                        } else if (element == -1) {
-                          return (
-                            <span
-                              key={index}
-                              style={{
-                                color: redText,
-                                background: redBackground,
-                              }}
-                            >
-                              {answer.charAt(index - 1)}
-                            </span>
-                          );
-                        }
-                      })}
-                    </div>
-                  )}
-                </div>
-                <input
-                  type="text"
-                  style={{
-                    zIndex: "1",
-                    margin: "0 0.5em 00.5rem 0.5em",
-                    fontWeight: "500",
-                    lineHeight: "1.2",
-                    fontSize: "1.25rem",
-                    border: "none",
-                    paddingTop: "0px",
-                  }}
-                  value={attemptWord}
-                  onChange={(e) => handleChange(e)}
-                  size={answer.length}
-                ></input>
-                <Card.Title>{" " + chunk3}</Card.Title>
-              </Form>
-            </>
-          )}
-        </>
-        <Card.Text>{translated}</Card.Text>
-      </Card.Body>
-    </Card>
+                  <p className="section">&emsp;{chunk3}</p>
+                </form>
+              </>
+            )}
+          </>
+          <div className="translated">{translated}</div>
+        </div>
+      </div>
+    </main>
   );
 }
