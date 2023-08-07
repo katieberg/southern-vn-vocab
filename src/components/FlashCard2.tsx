@@ -1,5 +1,3 @@
-import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
 import { useState, useEffect } from "react";
 import { dataProps } from "myTypes";
 
@@ -238,8 +236,8 @@ export function FlashCard2(data: dataProps) {
                       value={attemptWord}
                       onChange={(e) => handleChange(e)}
                     ></input>
-                    <p className="section">&emsp;{chunk2}</p>
                   </div>
+                  <p className="section">&emsp;{chunk2}</p>
                 </form>
               </>
             )}
@@ -270,13 +268,14 @@ export function FlashCard2(data: dataProps) {
                         })}
                       </div>
                     )}
+                    <input
+                      style={{ width: answer.length + "ch" }}
+                      type="text"
+                      value={attemptWord}
+                      onChange={(e) => handleChange(e)}
+                    ></input>
                   </div>
-                  <input
-                    style={{ width: answer.length + "ch" }}
-                    type="text"
-                    value={attemptWord}
-                    onChange={(e) => handleChange(e)}
-                  ></input>
+
                   <p className="section">&emsp;{chunk3}</p>
                 </form>
               </>

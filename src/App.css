@@ -51,7 +51,7 @@ form{
 }
 
 input{
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     width: 5ch;
 }
 .overlap-input{
@@ -60,11 +60,12 @@ input{
     font-size: 1.25rem;
     font-weight: 500;
     line-height: 1.2;
+    position:relative;
 }
 
 .solution-reveal{
     position:absolute;
-
+    margin:2px;
 } 
 
 .correct-letter{
