@@ -1,7 +1,22 @@
 import { useState, useEffect } from "react";
 import { dataProps } from "myTypes";
 
-export function FlashCard2(data: dataProps) {
+//uncomment when ready to do supermemo
+// import dayjs from "dayjs";
+// import { supermemo, SuperMemoItem, SuperMemoGrade } from "supermemo";
+// interface Flashcard extends SuperMemoItem {
+//   front: string; //"prompt" in current vars
+//   back: string; //"answer" in current vars
+//   dueDate: string;
+//   frontMP3Male: string; //sentenceMP3file
+//   backMP3Male: string; //wordOnlyMP3file in current vars
+//   frontMP3Female: string;
+//   backMP3Female: string;
+//   translatedFront: string; //translatedSentence
+//   translatedBack: string; //translatedAnswer
+// }
+
+export function FlashCard(data: dataProps) {
   let myData = data;
   // let [numAttempts, setNumAttempts] = useState(myData.numAttempts);
   let [numWordsSeen, setNumWordsSeen] = useState(myData.numWordsSeen);
@@ -25,7 +40,7 @@ export function FlashCard2(data: dataProps) {
   var decideCategory = () => {
     if (
       seenPile ==
-        "Answer;MP3 for answer only;Prompt;Full Sentence;MP3 for full Sentence;Word in English;Sentence in English" +
+        "ID;Answer;Male Answer MP3; Female Answer MP3;Prompt;Full Sentence;Male Sentence MP3;Female Sentence MP3;Word in English;Sentence in English" +
           "\n" ||
       seenPile == "" ||
       numCorrect > numWordsSeen
@@ -52,18 +67,30 @@ export function FlashCard2(data: dataProps) {
   let [passOrFail, setPassOrFail] = useState("");
   let [diff, setDiff] = useState([0]);
   let [firstTryBool, setFirstTryBool] = useState(true);
+  let [shrink, setShrink] = useState(false);
+  let [pitch, setPitch] = useState("female");
   if (newWordsArray.length <= 1) {
     return <>loading2...</>;
   }
+
   var currentFlashCardDataStr = newWordsArray[1]?.toLowerCase();
   var currentFlashCardDataArr = currentFlashCardDataStr.split(";");
-  var answer = currentFlashCardDataArr[0];
-  var wordOnlyMP3File = currentFlashCardDataArr[1];
-  var prompt = currentFlashCardDataArr[2];
-  var sentenceMP3file = currentFlashCardDataArr[4];
-  var translated = currentFlashCardDataArr[5];
-  var wordHistoryStr = currentFlashCardDataArr[7] || "";
-  var wordHistoryArr = wordHistoryStr.split(" ");
+  // var id = currentFlashCardDataArr[0];
+  var answer = currentFlashCardDataArr[1];
+  var maleAnswerMP3File = currentFlashCardDataArr[2];
+  var femaleAnswerMP3File = currentFlashCardDataArr[3];
+  var prompt = currentFlashCardDataArr[4];
+  var maleSentenceMP3File = currentFlashCardDataArr[6];
+  var femaleSentenceMP3File = currentFlashCardDataArr[7];
+  var translatedAnswer = currentFlashCardDataArr[8];
+  var translatedSentence = currentFlashCardDataArr[9];
+  var wordHistoryStr = currentFlashCardDataArr[10] || "";
+  var wordHistoryTemp = wordHistoryStr.split(" ");
+
+  var wordHistoryArr: boolean[] = wordHistoryTemp.map((str) => {
+    if (str == "true") return true;
+    else return false;
+  });
 
   var chunk1 = "";
   var chunk2 = "";
@@ -115,7 +142,7 @@ export function FlashCard2(data: dataProps) {
       "seenPile",
       localStorage.getItem("seenPile") +
         currentFlashCardDataStr +
-        ";-1 -1 -1 -1 -1 -1 -1 -1 -1 " +
+        ";false false false false false false false false false " +
         firstTryBool
     );
     localStorage.setItem("newPile", newWordsArray.join("\n"));
@@ -124,7 +151,7 @@ export function FlashCard2(data: dataProps) {
     setSeenPile(
       seenPile +
         currentFlashCardDataStr +
-        ";-1 -1 -1 -1 -1 -1 -1 -1 -1 " +
+        ";false false false false false false false false false " +
         firstTryBool
     );
     setCategory(decideCategory());
@@ -133,14 +160,16 @@ export function FlashCard2(data: dataProps) {
   var updateSeenPile = () => {
     newWordsArray.splice(1, 1);
     wordHistoryArr.shift();
-    wordHistoryArr.push(" " + firstTryBool);
+    wordHistoryArr.push(firstTryBool);
     currentFlashCardDataArr[7] = wordHistoryArr.join(" ");
+    currentFlashCardDataStr = currentFlashCardDataArr.join(";");
     newWordsArray.push(currentFlashCardDataStr);
     localStorage.setItem(category, newWordsArray.join("\n"));
     localStorage.setItem(
       "numCorrect",
       firstTryBool ? (numCorrect + 1).toString() : numCorrect.toString()
     );
+
     setSeenPile(newWordsArray.join("\n"));
     setCategory(decideCategory());
   };
@@ -173,10 +202,19 @@ export function FlashCard2(data: dataProps) {
   };
   var handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    let sentenceMP3 = "../../mp3s/" + sentenceMP3file;
-    let wordMP3 = "../../mp3s/" + wordOnlyMP3File;
+    let answerMP3File;
+    let sentenceMP3File;
+    if (pitch == "female") {
+      answerMP3File = femaleAnswerMP3File;
+      sentenceMP3File = femaleSentenceMP3File;
+    } else {
+      answerMP3File = maleAnswerMP3File;
+      sentenceMP3File = maleSentenceMP3File;
+    }
+    let sentenceMP3Path = "../../mp3s/" + sentenceMP3File;
+    let answerMP3Path = "../../mp3s/" + answerMP3File;
     if (attemptWord.toLowerCase() == answer) {
-      new Audio(sentenceMP3).play();
+      new Audio(sentenceMP3Path).play();
       if (firstTryBool == true) {
         localStorage.setItem("numCorrect", (numCorrect + 1).toString());
         setNumCorrect(numCorrect + 1);
@@ -187,7 +225,7 @@ export function FlashCard2(data: dataProps) {
       setAttemptWord("");
       setTimeout(nextCard, 3000);
     } else if (attemptWord.toLowerCase() != answer) {
-      new Audio(wordMP3).play();
+      new Audio(answerMP3Path).play();
       diffFunction();
       setFirstTryBool(false);
       setPassOrFail("Fail");
@@ -195,11 +233,31 @@ export function FlashCard2(data: dataProps) {
     }
   };
 
-  //want to fix colors and font family, also sometimes when input box is on a new line, the answer fills in above the line
+  var toggleShrink = () => {
+    setShrink(!shrink);
+  };
+  var togglePitch = () => {
+    if (pitch == "female") {
+      setPitch("male");
+    } else {
+      setPitch("female");
+    }
+  };
+
   return (
     <main>
       <div className="flashcard">
-        <h2>{category == "newPile" ? "New Word" : "Previously Seen"}</h2>
+        <h2>
+          <div className="toggle-top">
+            <span>
+              {category == "newPile" ? "New Word" : "Previously Seen"}
+            </span>
+            <span className="toggle" onClick={togglePitch}>
+              {pitch == "female" ? "♀" : "♂"}
+            </span>
+          </div>
+        </h2>
+
         <div className="flashcard-body">
           <>
             {underscoreChunk == 1 && (
@@ -281,8 +339,22 @@ export function FlashCard2(data: dataProps) {
               </>
             )}
           </>
-          <div className="translated">{translated}</div>
         </div>
+      </div>
+      <div className="shrink-card">
+        <div className="toggle-top">
+          <p className="translated-answer">{translatedAnswer}</p>
+          <span className="toggle" onClick={toggleShrink}>
+            {shrink ? "˅" : "˄"}
+          </span>
+        </div>
+
+        <p
+          className="translated-sentence"
+          style={{ display: shrink ? "none" : "block" }}
+        >
+          {translatedSentence}
+        </p>
       </div>
     </main>
   );

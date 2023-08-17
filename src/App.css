@@ -87,6 +87,37 @@ input{
     padding-top: 0px;
 } */
 
-.translated{
+.shrink-card{
+    width:17rem;
+    margin: 2rem auto;
+    text-align: left;
+    border-radius: 0.5rem;
+
+    border: solid #c0661297 1px;
+    /* box-shadow: 5px 5px black; */
+    background:#f6b93b;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content: space-between;
+    padding:0.5rem;
+}
+
+.toggle-top{
+    display: flex;
+    justify-content: space-between;
+
+}
+.toggle:hover{
+    cursor:pointer;
+}
+
+.translated-answer{
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.translated-sentence{
+    margin-top: 0.5rem;
     font-size: 0.9rem;
 }

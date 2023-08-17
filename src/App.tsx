@@ -1,9 +1,8 @@
 import { Background } from "./components/Background";
 
 import { useEffect, useState } from "react";
-
 import "./App.css";
-import textfile from "./assets/anki_sample_word_upfront.txt";
+import textfile from "./assets/anki_sample_word_upfront_with_audio.txt";
 
 function App() {
   let getIntFromStorage = (item: string) => {
@@ -23,7 +22,7 @@ function App() {
         setNewPile(localStorage.getItem("newPile") || textContent);
         setSeenPile(
           localStorage.getItem("category1") ||
-            "Answer;MP3 for answer only;Prompt;Full Sentence;MP3 for full Sentence;Word in English;Sentence in English" +
+            "ID;Answer;Male Answer MP3; Female Answer MP3;Prompt;Full Sentence;Male Sentence MP3;Female Sentence MP3;Word in English;Sentence in English" +
               "\n"
         );
         setNumAttempts(
@@ -42,7 +41,7 @@ function App() {
         localStorage.setItem(
           "seenPile",
           localStorage.getItem("category1") ||
-            "Answer;MP3 for answer only;Prompt;Full Sentence;MP3 for full Sentence;Word in English;Sentence in English" +
+            "ID;Answer;Male Answer MP3; Female Answer MP3;Prompt;Full Sentence;Male Sentence MP3;Female Sentence MP3;Word in English;Sentence in English" +
               "\n"
         );
         localStorage.setItem(
