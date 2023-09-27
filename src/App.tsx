@@ -6,11 +6,11 @@ import textfile from "./assets/anki_sample_word_upfront_with_audio.txt";
 import dayjs from "dayjs";
 
 function App() {
-  let getIntFromStorage = (item: string) => {
-    if (item != undefined) {
-      return parseInt(item);
-    } else return 0;
-  };
+  // let getIntFromStorage = (item: string) => {
+  //   if (item != undefined) {
+  //     return parseInt(item);
+  //   } else return 0;
+  // };
   let [notYetSeenPile, setNotYetSeenPile] = useState(""); //change this name later
   let [dueYesterdayPile, setDueYesterdayPile] = useState("");
   let [dueTodayPile, setDueTodayPile] = useState("");
@@ -37,14 +37,14 @@ function App() {
           localStorage.getItem("dueLaterPile")?.split("\n") || [];
         let notYetSeenArr: string[] =
           localStorage.getItem("notYetSeenPile")?.split("\n") || [];
-        let saved = false;
+        // let saved = false;
         if (
           dueYesterdayArr.length > 1 &&
           dueTodayArr.length > 1 &&
           dueLaterArr.length > 1 &&
           notYetSeenArr.length > 1
         ) {
-          saved = true;
+          // saved = true;
           allFlashCardsArray = [headerStr]; //need to remove from e.g. dueYesterdayArr after moving to allflashcardsarr
           for (let i = 1; i < dueYesterdayArr.length; i++) {
             allFlashCardsArray.push(dueYesterdayArr[i]);

@@ -31,7 +31,7 @@ export function Card(data: dataProps) {
     myData.dueYesterdayPile
   );
   let [dueLaterPile, setDueLaterPile] = useState(myData.dueLaterPile);
-  let [dueDateRow, setDueDateRow] = useState(myData.dueDateRow);
+  let [dueDateRow] = useState(myData.dueDateRow);
   let [category, setCategory] = useState("");
   let [newWordsArray, setNewWordsArray] = useState([""]);
   let [attemptWord, setAttemptWord] = useState("");

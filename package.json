@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "deploy": "npm run build && surge . statuesque-distance.surge.sh"
+    "deploy": "npm run build && surge ./dist statuesque-distance.surge.sh"
   },
   "dependencies": {
     "csv-parser": "^3.0.0",
