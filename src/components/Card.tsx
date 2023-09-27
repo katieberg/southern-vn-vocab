@@ -1,81 +1,137 @@
 import { useState, useEffect } from "react";
 import { dataProps } from "myTypes";
+import dayjs from "dayjs";
+import { supermemo, SuperMemoItem, SuperMemoGrade } from "supermemo";
+//ID;Answer;Male Answer MP3; Female Answer MP3;Prompt;Full Sentence;Male Sentence MP3;Female Sentence MP3;Word in English;Sentence in English;SuperMemo Interval;SuperMemo Repetition;SuperMemo EFactor
+interface Flashcard extends SuperMemoItem {
+  id: string;
+  answerInVietnamese: string;
+  maleAnswerMP3: string;
+  femaleAnswerMP3: string;
+  prompt: string;
+  sentenceInVietnamese: string;
+  maleSentenceMP3: string;
+  femaleSentenceMP3: string;
+  wordInEnglish: string;
+  sentenceInEnglish: string;
+  dueDate: string;
+}
 
-//uncomment when ready to do supermemo
-// import dayjs from "dayjs";
-// import { supermemo, SuperMemoItem, SuperMemoGrade } from "supermemo";
-// interface Flashcard extends SuperMemoItem {
-//   front: string; //"prompt" in current vars
-//   back: string; //"answer" in current vars
-//   dueDate: string;
-//   frontMP3Male: string; //sentenceMP3file
-//   backMP3Male: string; //wordOnlyMP3file in current vars
-//   frontMP3Female: string;
-//   backMP3Female: string;
-//   translatedFront: string; //translatedSentence
-//   translatedBack: string; //translatedAnswer
-// }
+function practice(flashcard: Flashcard, grade: SuperMemoGrade): Flashcard {
+  const { interval, repetition, efactor } = supermemo(flashcard, grade);
+  const dueDate = dayjs(Date.now()).add(interval, "day").toISOString();
+  return { ...flashcard, interval, repetition, efactor, dueDate };
+}
 
-export function FlashCard(data: dataProps) {
+export function Card(data: dataProps) {
   let myData = data;
   // let [numAttempts, setNumAttempts] = useState(myData.numAttempts);
-  let [numWordsSeen, setNumWordsSeen] = useState(myData.numWordsSeen);
-  let [numCorrect, setNumCorrect] = useState(myData.numCorrect);
-  let [seenPile, setSeenPile] = useState(myData.seenPile);
-  let [newPile, setNewPile] = useState(myData.newPile);
-
-  useEffect(() => {
-    // setNumAttempts(myData.numAttempts);
-    setNumWordsSeen(myData.numWordsSeen);
-    setNumCorrect(myData.numCorrect);
-    setSeenPile(myData.seenPile);
-    setNewPile(myData.newPile);
-  }, [
-    myData.numAttempts,
-    myData.numWordsSeen,
-    myData.numCorrect,
-    myData.seenPile,
-    myData.newPile,
-  ]);
-  var decideCategory = () => {
-    if (
-      seenPile ==
-        "ID;Answer;Male Answer MP3; Female Answer MP3;Prompt;Full Sentence;Male Sentence MP3;Female Sentence MP3;Word in English;Sentence in English" +
-          "\n" ||
-      seenPile == "" ||
-      numCorrect > numWordsSeen
-    ) {
-      return "newPile";
-    } else {
-      return "seenPile";
-    }
-  };
-  let [category, setCategory] = useState(() => {
-    //issue: this is staying as seenPile, but it's still pulling from newPile, but marking them previously seen???
-    return decideCategory();
-  });
-
-  const [newWordsArray, setNewWordsArray] = useState([""]);
-
-  useEffect(() => {
-    const saved = category == "seenPile" ? seenPile : newPile;
-    const arr = saved?.split("\n");
-    setNewWordsArray(arr || [""]);
-  }, [category, seenPile, newPile, setNewWordsArray]);
-
+  let [dueTodayPile, setDueTodayPile] = useState(myData.dueTodayPile);
+  let [dueYesterdayPile, setDueYesterdayPile] = useState(
+    myData.dueYesterdayPile
+  );
+  let [dueLaterPile, setDueLaterPile] = useState(myData.dueLaterPile);
+  let [dueDateRow, setDueDateRow] = useState(myData.dueDateRow);
+  let [category, setCategory] = useState("");
+  let [newWordsArray, setNewWordsArray] = useState([""]);
   let [attemptWord, setAttemptWord] = useState("");
   let [passOrFail, setPassOrFail] = useState("");
   let [diff, setDiff] = useState([0]);
-  let [firstTryBool, setFirstTryBool] = useState(true);
+  let [firstTryBool, setFirstTryBool] = useState(true); //don't need w supermemo
   let [shrink, setShrink] = useState(false);
   let [pitch, setPitch] = useState("female");
+
+  var decideCategory = () => {
+    let headerStr: string =
+      "ID;Answer;Male Answer MP3; Female Answer MP3;Prompt;Full Sentence;Male Sentence MP3;Female Sentence MP3;Word in English;Sentence in English;SuperMemo Interval;SuperMemo Repetition;SuperMemo EFactor;SuperMemo Due Date";
+    if (
+      dueYesterdayPile == headerStr ||
+      dueYesterdayPile == "" ||
+      dueYesterdayPile == undefined
+    ) {
+      if (
+        dueTodayPile == headerStr ||
+        dueTodayPile == "" ||
+        dueTodayPile == undefined
+      ) {
+        setCategory("noWordsLeft");
+      } else setCategory("dueTodayPile");
+    } else {
+      setCategory("dueYesterdayPile");
+    }
+  };
+  useEffect(() => {
+    // setNumAttempts(myData.numAttempts);
+    setDueTodayPile(
+      localStorage.getItem("dueTodayPile") || myData.dueTodayPile
+    );
+    setDueYesterdayPile(myData.dueYesterdayPile);
+    setDueLaterPile(myData.dueLaterPile);
+
+    decideCategory();
+    let saved: string = "";
+    if (category == "dueYesterdayPile") {
+      saved = dueYesterdayPile;
+    } else if (category == "dueTodayPile") {
+      saved = dueTodayPile;
+    } else {
+      saved = "";
+    }
+    const arr = saved?.split("\n");
+    if (newWordsArray.length == arr.length) {
+    } else {
+      setNewWordsArray(arr || [""]);
+    }
+  }, [
+    myData.dueTodayPile,
+    myData.dueYesterdayPile,
+    myData.dueLaterPile,
+    dueYesterdayPile,
+    category,
+    newWordsArray,
+    dueTodayPile,
+    dueLaterPile,
+  ]);
+
   if (newWordsArray.length <= 1) {
     return <>loading2...</>;
   }
-
-  var currentFlashCardDataStr = newWordsArray[1]?.toLowerCase();
+  var currentFlashCardDataStr = newWordsArray[1]?.toLowerCase(); //how to make use of supermemo?do i have to sort all of them????
   var currentFlashCardDataArr = currentFlashCardDataStr.split(";");
-  // var id = currentFlashCardDataArr[0];
+  let flashCard: Flashcard = {
+    id: currentFlashCardDataArr[0],
+    answerInVietnamese: currentFlashCardDataArr[1],
+    maleAnswerMP3: currentFlashCardDataArr[2],
+    femaleAnswerMP3: currentFlashCardDataArr[3],
+    prompt: currentFlashCardDataArr[4],
+    sentenceInVietnamese: currentFlashCardDataArr[5],
+    maleSentenceMP3: currentFlashCardDataArr[6],
+    femaleSentenceMP3: currentFlashCardDataArr[7],
+    wordInEnglish: currentFlashCardDataArr[8],
+    sentenceInEnglish: currentFlashCardDataArr[9],
+    interval: parseInt(currentFlashCardDataArr[10]),
+    repetition: parseInt(currentFlashCardDataArr[11]),
+    efactor: parseInt(currentFlashCardDataArr[12]),
+    dueDate: currentFlashCardDataArr[13],
+  }; //want this as part of state? or to have function that converts flashcard back to array in the format of currentFlashCardDataArr
+  function flashCardToDataArr(flashcard: Flashcard) {
+    let tempArr: string[] = [];
+    tempArr.push(flashcard.id);
+    tempArr.push(flashcard.answerInVietnamese);
+    tempArr.push(flashcard.maleAnswerMP3);
+    tempArr.push(flashcard.femaleAnswerMP3);
+    tempArr.push(flashcard.prompt);
+    tempArr.push(flashcard.sentenceInVietnamese);
+    tempArr.push(flashcard.maleSentenceMP3);
+    tempArr.push(flashcard.femaleSentenceMP3);
+    tempArr.push(flashcard.wordInEnglish);
+    tempArr.push(flashcard.sentenceInEnglish);
+    tempArr.push(flashcard.interval.toString());
+    tempArr.push(flashcard.repetition.toString());
+    tempArr.push(flashcard.efactor.toString());
+    tempArr.push(flashcard.dueDate);
+    return tempArr;
+  }
   var answer = currentFlashCardDataArr[1];
   var maleAnswerMP3File = currentFlashCardDataArr[2];
   var femaleAnswerMP3File = currentFlashCardDataArr[3];
@@ -84,13 +140,8 @@ export function FlashCard(data: dataProps) {
   var femaleSentenceMP3File = currentFlashCardDataArr[7];
   var translatedAnswer = currentFlashCardDataArr[8];
   var translatedSentence = currentFlashCardDataArr[9];
-  var wordHistoryStr = currentFlashCardDataArr[10] || "";
-  var wordHistoryTemp = wordHistoryStr.split(" ");
-
-  var wordHistoryArr: boolean[] = wordHistoryTemp.map((str) => {
-    if (str == "true") return true;
-    else return false;
-  });
+  var dueTodayArr = dueTodayPile.split("\n");
+  var dueLaterArr = dueLaterPile.split("\n");
 
   var chunk1 = "";
   var chunk2 = "";
@@ -136,54 +187,49 @@ export function FlashCard(data: dataProps) {
       }
     }
   }
-  var moveToSeenPile = () => {
-    newWordsArray.splice(1, 1);
-    localStorage.setItem(
-      "seenPile",
-      localStorage.getItem("seenPile") +
-        currentFlashCardDataStr +
-        ";false false false false false false false false false " +
-        firstTryBool
-    );
-    localStorage.setItem("newPile", newWordsArray.join("\n"));
-    localStorage.setItem("numWordsSeen", (numWordsSeen + 1).toString());
-    setNewPile(newWordsArray.join("\n"));
-    setSeenPile(
-      seenPile +
-        currentFlashCardDataStr +
-        ";false false false false false false false false false " +
-        firstTryBool
-    );
-    setCategory(decideCategory());
-    setNumWordsSeen(numWordsSeen + 1);
-  };
-  var updateSeenPile = () => {
-    newWordsArray.splice(1, 1);
-    wordHistoryArr.shift();
-    wordHistoryArr.push(firstTryBool);
-    currentFlashCardDataArr[7] = wordHistoryArr.join(" ");
-    currentFlashCardDataStr = currentFlashCardDataArr.join(";");
-    newWordsArray.push(currentFlashCardDataStr);
-    localStorage.setItem(category, newWordsArray.join("\n"));
-    localStorage.setItem(
-      "numCorrect",
-      firstTryBool ? (numCorrect + 1).toString() : numCorrect.toString()
-    );
+  function decidePile(cardData: string[]) {
+    //for some reason the card initially can go to dueToday then disappears after next card
+    let entryDate: dayjs.Dayjs = dayjs(cardData[dueDateRow]);
+    if (dayjs().isBefore(entryDate)) {
+      dueLaterArr.push(cardData.join(";")); //need to use setstate and update storage
+      localStorage.setItem("dueLaterPile", dueLaterArr.join("\n"));
+      setDueLaterPile(dueLaterArr.join("\n"));
+    } else {
+      let temp = dueTodayPile.split("\n");
+      temp.splice(1, 1);
+      temp.push(cardData.join(";"));
+      localStorage.setItem("dueTodayPile", temp.join("\n"));
+      setDueTodayPile(dueTodayArr.join("\n"));
+      setNewWordsArray(temp);
+    }
+  }
+  var moveToNewPile = () => {
+    //for this, we need to instead update by using supermemo practice function (should be handled in handleSubmit), AND move to the correct pile based on that (using decideCategory function).
+    newWordsArray.splice(1, 1); //need this? below?
+    // currentFlashCardDataStr = currentFlashCardDataArr.join(";");
+    // newWordsArray.push(currentFlashCardDataStr);
+    // localStorage.setItem(category, newWordsArray.join("\n"));
 
-    setSeenPile(newWordsArray.join("\n"));
-    setCategory(decideCategory());
+    // setSeenPile(newWordsArray.join("\n"));
+    // decideCategory();
+    localStorage.setItem(category, newWordsArray.join("\n"));
+    if (category == "dueTodayPile") {
+      setDueTodayPile(newWordsArray.join("\n"));
+    } else {
+      setDueYesterdayPile(newWordsArray.join("\n"));
+    }
+
+    decidePile(flashCardToDataArr(flashCard));
+
+    decideCategory();
   };
 
   var nextCard = () => {
-    if (category == "newPile") {
-      moveToSeenPile();
-    } else {
-      updateSeenPile();
-    }
+    moveToNewPile();
     setPassOrFail("");
     setAttemptWord("");
     setDiff([0]);
-    setCategory(decideCategory());
+    decideCategory();
     setFirstTryBool(true);
   };
   var handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,9 +261,9 @@ export function FlashCard(data: dataProps) {
     let answerMP3Path = "../../mp3s/" + answerMP3File;
     if (attemptWord.toLowerCase() == answer) {
       new Audio(sentenceMP3Path).play();
+
       if (firstTryBool == true) {
-        localStorage.setItem("numCorrect", (numCorrect + 1).toString());
-        setNumCorrect(numCorrect + 1);
+        flashCard = practice(flashCard, 5);
       }
 
       setPassOrFail("Pass");
@@ -225,6 +271,7 @@ export function FlashCard(data: dataProps) {
       setAttemptWord("");
       setTimeout(nextCard, 3000);
     } else if (attemptWord.toLowerCase() != answer) {
+      flashCard = practice(flashCard, 0);
       new Audio(answerMP3Path).play();
       diffFunction();
       setFirstTryBool(false);
@@ -251,6 +298,7 @@ export function FlashCard(data: dataProps) {
           <div className="toggle-top">
             <span>
               {category == "newPile" ? "New Word" : "Previously Seen"}
+              {/* need to fix this once the meat is working */}
             </span>
             <span className="toggle" onClick={togglePitch}>
               {pitch == "female" ? "♀" : "♂"}
